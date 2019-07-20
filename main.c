@@ -8,10 +8,13 @@
 //
 
 #include "flashembed.h"
+
 enum output{ UNUSED, LINK_ONLY, OUTPUT_ONLY, BOTH };
 
 int main(int argc, char *argv[]) {
   int opt;
+  int width = -1, height = -1;
+  int scale = -1;
   char* swf_path = NULL;
   char* html_path = NULL;
   char* browser = NULL;
@@ -20,7 +23,7 @@ int main(int argc, char *argv[]) {
 
   no_args_given(argc);
 
-  while ((opt = getopt(argc, argv,":i:l:o:b:p")) != -1) {
+  while ((opt = getopt(argc, argv,":i:l:o:b:pw:h:s:")) != -1) {
     switch (opt) {
       case 'l': // link arg
         is_output_given = LINK_ONLY;
@@ -38,6 +41,15 @@ int main(int argc, char *argv[]) {
           browser = DEFAULT;
           optind -= 1;
         }
+        break;
+      case 'w':
+        SET(width);
+        break;
+      case 'h':
+        SET(height);
+        break;
+      case 's':
+        SET(scale);
         break;
       case 'p': // print arg
         print_flag ^= 1;
@@ -77,7 +89,18 @@ int main(int argc, char *argv[]) {
   html_path = (html_path == NULL) ? default_html_path : html_path;
   if (print_flag == 1) printf("%s", html_path);
 
-  make_html_file(swf_path, html_path);
+  switch (check_mode(width, height, scale)) {
+    case FULL_SIZE:
+      make_html_file(swf_path, html_path);
+      break;
+    case WH:
+      make_html_file_wh(swf_path, html_path, width, height);
+      break;
+    case SCALE:
+      make_html_file_scale(swf_path, html_path, scale);
+      break;
+  }
+
   if (browser != NULL) open_html_file(html_path, browser);
 
   return 0;
