@@ -15,6 +15,7 @@
     #define BROWSER "%s "
   #endif
 
+
   #define EMBED_FULL "<object>\n\t<embed src=\"%s\" width=\"100%%\" height=\"100%%\"></embed>\n</object>"
   #define EMBED_WH "<object>\n\t<embed src=\"%s\" width=\"%d\" height=\"%d\"></embed>\n</object>"
   #define EMBED_SCALE "<object>\n\t<embed src=\"%s\" width=\"%d%%\" height=\"%d%%\"></embed>\n</object>"
@@ -41,3 +42,4 @@
   enum Modeset check_mode(int w, int h, int s);
 
 #endif
+
